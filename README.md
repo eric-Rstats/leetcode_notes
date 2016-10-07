@@ -1,2 +1,7 @@
-# practice-coding
-practice coding in multiple ways
+# practicing coding
+
+这里的文件全部都是在atom编辑器下边编辑，利用git插件上传到github上去的；
+
++ 1. The PAT code:浙大的在线网站，可以进行代码的练习；我利用它来学习python
+
++ 2. 准备尝试在学习统计机器学习的过程中，对一些简单的算法，自己写一下代码，加深一下理解，提高一下代码水平，当然这个过程应该还较为漫长。
