@@ -67,4 +67,5 @@ costfunc2 <- function(data, p, alpha=0.01, theta, iteration = 500) {
 
 test2 <- costfunc2(data2, p=2, alpha = 0.01, theta = c(0,0,0), iteration = 1000)
 
-
+###############################################
+#待解决的问题：标准化操作，矩阵的操作；
