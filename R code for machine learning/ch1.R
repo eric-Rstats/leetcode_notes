@@ -36,6 +36,9 @@ test <- costfunc1(data,alpha = 0.01, theta = c(0,0), iteration = 1000)
 tail(test)
 plot(test$cost[-1],col="red",type="l")
 
+yfit1 <- cbind(rep(1,nrow(data)),data[,1]) %*% as.numeric(test[1001,1:2])
+ggplot(data,aes(Population,Profit))+geom_point(colour="red")+geom_abline(data=yfit1)
+
 ## 考虑二元线性回归
 path2 <- "E:/python学习/吴恩达机器学习/machine-learning-ex1/ex1/ex1data2.txt"
 data2 <- read.csv(path2, header = F)
@@ -67,5 +70,39 @@ costfunc2 <- function(data, p, alpha=0.01, theta, iteration = 500) {
 
 test2 <- costfunc2(data2, p=2, alpha = 0.01, theta = c(0,0,0), iteration = 1000)
 
-###############################################
-#待解决的问题：标准化操作，矩阵的操作；
+##############################################
+# 考虑 学习率 alpha的选取问题
+##############################################
+alphalist <- c(0.01,0.02,0.03)
+y <- vapply(alphalist, FUN = function(x){
+            costfunc1(data,alpha = x, theta = c(0,0),iteration = 500)$cost[501]
+            }
+            , FUN.VALUE = numeric(1.0))
+plot(alphalist,y,type="l")
+
+
+#######################################
+# 线性回归模型 ############################
+#######################################
+linearreg <- function(data) {
+  data <- as.matrix(data)
+  n <- nrow(data)
+  p <- ncol(data)
+  x <- cbind(rep(1,n),data[,1:p-1])
+  y <- data[,p]
+  library(MASS)
+  coeff <- ginv(t(x)%*%x) %*% t(x) %*% y
+  fit <- x %*% coeff
+  return(list(coefficients=coeff, fit=fit))
+}
+
+
+
+
+
+
+
+
+
+
+
