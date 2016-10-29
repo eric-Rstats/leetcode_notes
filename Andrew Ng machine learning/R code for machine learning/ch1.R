@@ -20,15 +20,15 @@ costfunc1 <- function(data, alpha=0.01, theta = c(0,0),iteration = 500) {
   df <- data.frame(theta0=rep(0,iteration+1),
                    theta1 = rep(0, iteration + 1),
                    cost = rep(0,iteration + 1))
-  
+
   lapply(1:(iteration+1), FUN = function(i){
     yhat <- X %*% theta   #拟合值
     cost <- sum((yhat - data[,2])^2)/(2*n)
     df[i,] <<- c(theta, cost)
     theta <<- theta - t(X) %*% (yhat-data[,2]) * alpha / n
-    
+
   })
-  
+
   return(df)
 }
 
@@ -46,7 +46,7 @@ data2 <- scale(data2, center = TRUE, scale = TRUE)
 costfunc2 <- function(data, p, alpha=0.01, theta, iteration = 500) {
   # p表示自变量个数
   # 如果把iteration设置为0，就是一个单纯计算的公式
-  
+
   n <- nrow(data)
   #theta <- rep(0,p+1)
   X <- as.matrix(cbind(rep(1,n), data[,1:p])) # 设计矩阵
@@ -61,9 +61,9 @@ costfunc2 <- function(data, p, alpha=0.01, theta, iteration = 500) {
     cost <- sum((yhat - data[,p+1])^2)/(2*n)
     df[i,] <<- c(theta, cost)
     theta <<- theta - t(X) %*% (yhat-data[,p+1]) * alpha / n
-    
+
   })
-  
+
   return(df)
 }
 
@@ -95,14 +95,3 @@ linearreg <- function(data) {
   fit <- x %*% coeff
   return(list(coefficients=coeff, fit=fit))
 }
-
-
-
-
-
-
-
-
-
-
-
