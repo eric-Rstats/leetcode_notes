@@ -1,6 +1,6 @@
 # practicing coding
 
-这里的文件全部都是在atom编辑器下边编辑，利用git插件上传到github上去的；
+这里的文件全部都是在VS code,或者shell中编辑，利用git上传到github上去的；
 
 + 1. The PAT code:浙大的在线网站，可以进行代码的练习；我利用它来学习python
 
