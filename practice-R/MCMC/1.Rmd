@@ -1,0 +1,24 @@
+---
+title: "MCMC"
+author: "eric"
+date: "2017/4/27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = F)
+```
+
+
+
+```{r}
+library(mcmc)
+data("logit")
+head(logit)
+
+model <- glm(y~., data = logit, 
+             family = binomial(),
+             x = T)
+summary(model)
+```
+
