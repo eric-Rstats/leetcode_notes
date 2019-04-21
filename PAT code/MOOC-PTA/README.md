@@ -1,0 +1,12 @@
+# MOOC-陈越、何钦铭-数据结构 学习
+
+
+## 课程地址
+
++ [MOOC-陈越、何钦铭-数据结构](http://www.icourse163.org/learn/ZJU-93001?tid=1003997005#/learn/announce)
++ [PTA对应的代码练习题地址](https://pintia.cn/problem-sets/1077214780527620096)
+
+## 题目lists
+
++ [01-复杂度1 最大子列和问题](./01-复杂度1-最大子列和问题.py)
++ [01-复杂度2 Maximum Subsequence Sum](./01-复杂度2-Maximum_Subsequence_Sum.py)
