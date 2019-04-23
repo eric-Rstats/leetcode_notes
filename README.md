@@ -16,10 +16,10 @@
 
 1. [MOOC-陈越、何钦铭-数据结构](http://www.icourse163.org/learn/ZJU-93001?tid=1003997005#/learn/announce)
     + [PTA对应的代码练习题地址](https://pintia.cn/problem-sets/1077214780527620096)
-    + [作业的python代码实现](./PAT code/MOOC-陈越、何钦铭-数据结构)
+    + [作业的python代码实现](./PAT%20code/MOOC-陈越、何钦铭-数据结构)
 
 
 
-2. [《Fluent Python》学习jupyter笔记](./python/Fluent Python)
+2. [《Fluent Python》学习jupyter笔记](./python/Fluent%20Python)
 
 
