@@ -14,3 +14,4 @@
 + [02-线性结构3 Reversing Linked List](./02-线性结构3_Reversing_Linked_List.py)
 + [02-线性结构4 Pop Sequence](./02-线性结构4-Pop_Sequence.py)
 + [03-树1 树的同构](./03-树1_树的同构.py)
++ [03-树2 List Leaves](./03-树2_List_Leaves.py)
