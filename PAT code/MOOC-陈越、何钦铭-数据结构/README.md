@@ -11,5 +11,6 @@
 + [01-复杂度1 最大子列和问题](./01-复杂度1-最大子列和问题.py)
 + [01-复杂度2 Maximum Subsequence Sum](./01-复杂度2-Maximum_Subsequence_Sum.py)
 + [02-线性结构2 一元多项式的乘法与加法运算](./02-线性结构2-一元多项式的乘法与加法运算.py)
++ [02-线性结构3 Reversing Linked List](./02-线性结构3_Reversing_Linked_List.py)
 + [02-线性结构4 Pop Sequence](./02-线性结构4-Pop_Sequence.py)
-+ 
++ [03-树1 树的同构](./03-树1_树的同构.py)
