@@ -6,6 +6,27 @@ xgboost支持自定义损失函数，因为使用一阶导数和二阶导数，�
 
 ## 原理
 
+#### 处理不平衡数据集时
+
+For common cases such as ads clickthrough log, the dataset is extremely imbalanced. This can affect the training of XGBoost model, and there are two ways to improve it.
+
++ If you care only about the overall performance metric (AUC) of your prediction
+  + Balance the positive and negative weights via `scale_pos_weight`
+  + Use AUC for evaluation
++ If you care about predicting the right probability
+  + In such a case, you cannot re-balance the dataset
+  + Set parameter `max_delta_step` to a finite number (say 1) to help convergence
+
+
+
+关于一些细节:
+
+建树的时候，是使用hist还是greedy，还是approx
+
+![image-20200309222237203](img/image-20200309222237203.png)
+
+处理不平衡数据时，
+
 
 
 ## 与GBDT的一些区别
@@ -81,4 +102,4 @@ Xgboost基于Gradient Boosting进行优化，
 
   ![](./img/3-5.png)
 
-  ​
+  
