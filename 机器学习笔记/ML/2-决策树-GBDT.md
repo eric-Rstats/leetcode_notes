@@ -150,7 +150,7 @@ $$
 \\
 \begin{align}
 P(H(x)\neq f(x)) & = \sum_{i=0}^{|\frac T 2|}C_T^i (1-\epsilon)^i \epsilon^{T-i}\\
-& \leq e^{-2\delta^2 T} \leq e^{-2(\frac{1}{2}-\epsilon)^2 T}=e^{-\frac{1}{2}(1-2\epsilon)^2 T}\\
+& \leq e^{-2\delta^2 T} \leq e^{-2(\frac{1}{2}-\epsilon)^2 T}=e^{-1}(1-2\epsilon)^2 T\\
 & \rightarrow 0
 \end{align}
 $$
