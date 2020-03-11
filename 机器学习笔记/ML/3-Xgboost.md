@@ -25,8 +25,6 @@ For common cases such as ads clickthrough log, the dataset is extremely imbalanc
 
 ![image-20200309222237203](img/image-20200309222237203.png)
 
-处理不平衡数据时，
-
 
 
 ## 与GBDT的一些区别
