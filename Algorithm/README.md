@@ -93,3 +93,178 @@ def BinarySearch(nums, target):
 
 ## 4. 滑动窗口解题套路框架
 
+
+
+### 4.1 最小覆盖子串
+
+[76.最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
+
+> 给你一个字符串 S、一个字符串 T，请在字符串 S 里面找出：包含 T 所有字母的最小子串。
+>
+> 示例：
+>
+> 输入: S = "ADOBECODEBANC", T = "ABC"
+> 输出: "BANC"
+> 说明：
+>
+> 如果 S 中不存这样的子串，则返回空字符串 ""。
+> 如果 S 中存在这样的子串，我们保证它是唯一的答案。
+
+```Python
+# 从字符串S中寻找包含T中所有字母的最小子串
+# 从S中设置left,right，比较窗口中是否出现。都出现后，再逐渐缩小left。当又出现对应不上的时候，再右移right
+
+from collections import Counter
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        left, right, start = 0, 0, 0
+        minLen = float('inf')
+        needs = dict(Counter(t))
+        window = {item: 0 for item in needs}
+        match = 0
+
+        while right < len(s):
+            c1 = s[right]
+            if c1 in needs:
+                window[c1] += 1
+                if window[c1] == needs[c1]:
+                    # 如果出现次数对上了
+                    match += 1
+            #right += 1
+
+            while match == len(needs):
+                # 如果都找到了，需要把left移动了
+                if minLen > right - left + 1:
+                    start = left
+                    minLen = right - left + 1
+                c2 = s[left]
+                if c2 in needs:
+                    window[c2] -= 1
+                    if window[c2] < needs[c2]:
+                        match -= 1
+                left += 1
+
+            right += 1
+        return "" if minLen == float('inf') else s[start:start+minLen]
+```
+
+### 4.2 找到字符串中所有字母异位词
+
+[438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+
+> 给定一个字符串 s 和一个非空字符串 p，找到 s 中所有是 p 的字母异位词的子串，返回这些子串的起始索引。
+>
+> 字符串只包含小写英文字母，并且字符串 s 和 p 的长度都不超过 20100。
+>
+> 说明：
+>
+> 字母异位词指字母相同，但排列不同的字符串。
+> 不考虑答案输出的顺序。
+> 示例 1:
+>
+> 输入:
+> s: "cbaebabacd" p: "abc"
+>
+> 输出:
+> [0, 6]
+>
+> 解释:
+> 起始索引等于 0 的子串是 "cba", 它是 "abc" 的字母异位词。
+> 起始索引等于 6 的子串是 "bac", 它是 "abc" 的字母异位词。
+>  示例 2:
+>
+> 输入:
+> s: "abab" p: "ab"
+>
+> 输出:
+> [0, 1, 2]
+>
+> 解释:
+> 起始索引等于 0 的子串是 "ab", 它是 "ab" 的字母异位词。
+> 起始索引等于 1 的子串是 "ba", 它是 "ab" 的字母异位词。
+> 起始索引等于 2 的子串是 "ab", 它是 "ab" 的字母异位词。
+
+```python
+from collections import Counter
+
+
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        left, right, start = 0, 0, 0
+        needs = dict(Counter(p))
+        window = {item: 0 for item in needs}
+        match = 0
+        result = []
+
+        while right < len(s):
+            c1 = s[right]
+            if c1 in needs:
+                window[c1] += 1
+                if window[c1] == needs[c1]:
+                    # 如果出现次数对上了
+                    match += 1
+            #right += 1
+
+            while match == len(needs):
+                # 如果都找到了，需要把left移动了
+                if len(p) == right - left + 1:
+                    result.append(left)
+                c2 = s[left]
+                if c2 in needs:
+                    window[c2] -= 1
+                    if window[c2] < needs[c2]:
+                        match -= 1
+                left += 1
+
+            right += 1
+        return result
+```
+
+### 4.3 无重复的最长子串
+
+[3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+
+> 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+>
+> 示例 1:
+>
+> 输入: "abcabcbb"
+> 输出: 3 
+> 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+> 示例 2:
+>
+> 输入: "bbbbb"
+> 输出: 1
+> 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+> 示例 3:
+>
+> 输入: "pwwkew"
+> 输出: 3
+> 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+>      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        left, right = 0, 0
+        result = 0
+        needs = dict(Counter(s))
+        window = {item: 0 for item in needs}
+
+        while right < len(s):
+            c1 = s[right]
+            window[c1] += 1
+
+            while window[c1] > 1:
+                c2 = s[left]
+                window[c2] -= 1
+                left += 1
+
+            result = max(result, right-left+1)
+
+            right += 1
+        return result
+```
+
+### 4.4 题目
+
