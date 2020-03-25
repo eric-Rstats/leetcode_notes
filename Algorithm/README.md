@@ -268,3 +268,158 @@ class Solution:
 
 ### 4.4 题目
 
+
+
+
+
+## 5. 双指针
+
+左右指针、快慢指针。前者主要解决链表中的问题，比如链表中是否有环；后者主要解决数组（字符串）的问题，比如二分查找。
+
+### 5.1 快慢指针
+
+#### 判断链表中是否有环
+
+利用快慢指针，如果有环，则快指针和慢指针必定会遭遇
+
+[141. 环形链表](https://leetcode-cn.com/problems/linked-list-cycle/)
+
+```python
+class Solution:
+    def hasCycle(self, head: ListNode) -> bool:
+        slow = head
+        fast = head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+            if (fast == slow):
+                return True
+
+        return False
+```
+
+#### 已知链表中有环，返回这个环的起始位置
+
+[142. 环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+
+只需要在相遇后，额昂快慢指针中的任一个指向head，然后同速前进，再相遇的时候就是环的起点。
+
+```python
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        slow = head
+        fast = head
+
+        while True:
+            # 为了当没有环的时候跳出
+            if not (fast and fast.next):
+                return
+            slow = slow.next
+            fast = fast.next.next
+
+            if slow == fast:
+                break
+
+        fast = head
+        while slow != fast:
+            slow = slow.next
+            fast = fast.next
+
+        return fast
+```
+
+#### 寻找链表的中点
+
+[878.链表的中间结点](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
+
+```python
+class Solution:
+    def middleNode(self, head: ListNode) -> ListNode:
+        slow, fast = head, head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        return slow
+```
+
+####  寻找链表的倒数第k个元素
+
+[19. 删除链表的倒数第N个节点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+
+先让快指针移动k步，之后两个指针一起，当快指针指向末尾的时候，慢指针恰好是倒数第k个链表节点。
+
+```python
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        dummy = ListNode(-1)
+        dummy.next = head
+        slow, fast = dummy, dummy
+        for i in range(n):
+            fast = fast.next
+
+        while fast.next:
+            slow = slow.next
+            fast = fast.next
+
+        slow.next = slow.next.next
+        return dummy.next
+```
+
+### 5.2 左右指针
+
+#### 二分查找
+
+```python
+def binarySearch(nums, target):
+  left = 0
+  right = len(nums) - 1
+  
+  while left <= right:
+    mid = left + (right-left) // 2
+    if nums[mid] == target:
+      return mid
+    elif nums[mid] > target:
+      right = mid - 1
+    elif nums[mid] < target:
+      left = mid + 1
+      
+   return -1
+```
+
+#### 两数之和
+
+[167. 两数之和 II - 输入有序数组](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        left = 0
+        right = len(nums) - 1
+
+        while left <= right:
+            sum = nums[left] + nums[right]
+            if sum == target:
+                return [left, right]
+            elif sum < target:
+                left += 1
+            elif sum > target:
+                right -= 1
+        return -1
+```
+
+#### 反转数组
+
+```python
+def reverse(nums):
+  left = 0
+  right = len(nums) - 1
+  while left < right:
+    nums[left], nums[right] = nums[right],nums[left]
+    left += 1
+    right -= 1
+```
+
