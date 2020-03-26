@@ -423,3 +423,117 @@ def reverse(nums):
     right -= 1
 ```
 
+
+
+## 6. 二叉搜索树
+
+二叉搜索树：一个二叉树中，任意一个结点大于其左子树节点，小于其右子树的节点。
+
+### 6.1 判断一颗树是否是二叉搜索树
+
+[98. 验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+
+```python
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+
+        def helper(root, min, max):
+            if not root:
+                return True
+            if min and root.val <= min.val:
+                return False
+            if max and root.val >= max.val:
+                return False
+            return helper(root.left, min, root) and helper(root.right, root, max)
+
+        return helper(root, None, None)
+```
+
+### 6.2 在二叉搜索树里面搜索数字
+
+因为二叉搜索树有大小顺序，所以只需要对半查找
+
+[700. 二叉搜索树中的搜索](https://leetcode-cn.com/problems/search-in-a-binary-search-tree/)
+
+```python
+class Solution:
+    def searchBST(self, root: TreeNode, val: int) -> TreeNode:
+        if not root:
+            return None
+        if val == root.val:
+            return root
+        if val < root.val:
+            return self.searchBST(root.left, val)
+        if val > root.val:
+            return self.searchBST(root.right, val)
+
+```
+
+### 6.3 在二叉搜索树中插入一个数
+
+[701. 二叉搜索树中的插入操作](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
+
+```python
+class Solution:
+    def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
+        if root is None:
+            return TreeNode(val)
+        if root.val < val:
+            root.right = self.insertIntoBST(root.right, val)
+        if root.val > val:
+            root.left = self.insertIntoBST(root.left, val)
+
+        return root
+```
+
+### 6.4 在二叉搜索树中删除一个数
+
+删除的时候不能破坏二叉搜索树，返回的还得是一个二叉搜索树。
+
++ 假如目标值小于当前结点，就去左子树继续遍历去删除
++ 假如目标值大于当前结点，就去右子树继续遍历去删除
++ 假如目标值等于当前结点，若为叶子节点可以直接删除；但是若不是叶子节点，如果左孩子非空，那么要用中序遍历的后续节点替代它（即大于当前值的最小值）；若右孩子非空，那么要用中序遍历的前序节点替代它（即小于当前值的最大值）
+
+[450. 删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
+
+```python
+class Solution:
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
+
+        def successor(cur):
+            # 中序遍历的后续节点
+            cur = cur.right
+            while cur.left:
+                cur = cur.left
+            return cur
+
+        def predecessor(cur):
+            # 中序遍历的前序节点
+            cur = cur.left
+            while cur.right:
+                cur = cur.right
+            return cur
+
+        def delete(cur, key):
+            if not cur:
+                return None
+            if cur.val < key:
+                cur.right = delete(cur.right, key)
+            elif cur.val > key:
+                cur.left = delete(cur.left, key)
+            else:
+                if not cur.left and not cur.right:
+                    # 如果是叶子节点
+                    cur = None
+                elif cur.right:
+                    cur.val = successor(cur).val
+                    cur.right = delete(cur.right, cur.val)
+                else:
+                    cur.val = predecessor(cur).val
+                    cur.left = delete(cur.left, cur.val)
+
+            return cur
+
+        return delete(root, key)
+```
+
