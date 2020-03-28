@@ -1,6 +1,6 @@
 [toc]
 
-# LeetCode
+# LeetCode学习笔记
 
 Fucking-Alogorithm学习笔记: https://labuladong.gitbook.io/algo/
 
@@ -304,7 +304,7 @@ class Solution:
 
 [142. 环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 
-只需要在相遇后，额昂快慢指针中的任一个指向head，然后同速前进，再相遇的时候就是环的起点。
+只需要在相遇后，让快慢指针中的任一个指向head，然后同速前进，再相遇的时候就是环的起点。
 
 ```python
 class Solution:
@@ -535,5 +535,183 @@ class Solution:
             return cur
 
         return delete(root, key)
+```
+
+## 7. 如何计算完全二叉树的节点数
+
+> 满二叉树：除叶子节点外，每一层上的所有节点都有两个子节点的二叉树。国内有时候将完美二叉树称为完美二叉树。
+>
+> 完全二叉树：深度为k的，有n个节点的二叉树，当且仅当每一个节点都与深度为k的满二叉树中编号从1到n的节点一一对应时。
+
+
+
+```python
+class Solution:
+    def countNodes(self, root: TreeNode) -> int:
+        hl, hr = 0, 0
+        left, right = root, root
+
+        while left:
+            left = left.left
+            hl += 1
+
+        while right:
+            right = right.right
+            hr += 1
+
+        if hl == hr:
+            # 如果此次迭代左右子树高度一样，那么实际上是满二叉树
+            return 2 ** hl - 1
+        else:
+            return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+```
+
+![image-20200328135230038](img/image-20200328135230038.png)
+
+一颗完全二叉树的两颗子树，至少有一个是满二叉树。因此每次递归的时候，有一半会遇到`hl==hr`的终止条件，不会递归下去。故此段代码的复杂度为$O(log N * logN)$
+
+## 8. 二叉堆
+
+二叉堆主要操作就两个，`sink`和`swim`, 主要应用有两个，一个是堆排序，一个是优先级队列。
+
+二叉堆其实是一种特殊的完全二叉树，只不过存在数组里，一般的链表二叉树，我们操作的是指针，而在数组里，将数组索引作为指针。
+
+![image-20200328140435342](img/image-20200328140435342.png)
+
+最大堆： 每个节点都大于等于它的两个子节点
+
+最小堆：每个节点都小于等于它的两个子节点
+
+
+
+### 8. 1 优先级队列
+
+优先级队列：当你插入或者删除元素的时候，元素会自动排序，底层原理就是二叉堆的操作。
+
++ swim和sink，上浮和下沉
+
+插入和删除元素的时候，难免破坏堆的性质，这时候就需要通过这两个操作来恢复堆的性质。
+
+```python
+# 上浮
+def swim(k):
+    while k > 1 and k > parent(k):
+        # 如果第k个元素比上层大，将k换上去
+        parent(k), k = k, parent(k)
+        
+        
+# 下沉
+def sink(k):
+    while left(k) <= N:
+        # 不能沉入堆底
+        older = left(k)
+        # 如果右边节点存在，比一下大小
+        if right(k) <= N and older < right(k):
+        older = right(k)
+      
+        # 如果节点k比两个孩子都大，就不必下沉:
+        if older < k: break
+        # 否则进行交换
+        older, k = k, older
+```
+
++ insert方法：先把元素加到最后，然后把它上浮到正确的位置。$O(logK)$
++ delmax：先把堆顶元素A和堆底最后的元素B对调，然后删除A，再把B下沉到正确位置。$O(logK)$
+
+## 9. 栈与队列
+
+### 9.1 栈、队列的互相实现
+
+
+
+### 9.2 单调栈
+
+单调栈使得每一次新元素入栈后，栈内的元素都保持有序。
+
+#### next greater elements
+
+单调栈的应用不是很广泛，但是适用于一种典型的问题：下一个更大的元素。
+
+> 给你一个数组 T = [73, 74, 75, 71, 69, 72, 76, 73]，这个数组存放的是近几天的天气气温（这气温是铁板烧？不是的，这里用的华氏度）。你返回一个数组，计算：对于每一天，你还要至少等多少天才能等到一个更暖和的气温；如果等不到那一天，填 0 。
+>
+> 举例：给你 T = [73, 74, 75, 71, 69, 72, 76, 73]，你返回 [1, 1, 4, 2, 1, 1, 0, 0]。
+>
+> 解释：第一天 73 华氏度，第二天 74 华氏度，比 73 大，所以对于第一天，只要等一天就能等到一个更暖和的气温。后面的同理。
+
+```python
+def myfunc(nums):
+    stack = [] # 一个栈
+    for i in range(len(nums)-1, -1, -1):
+        while stack and nums[i] >= stack[-1]:
+            stack.pop()
+        ans[i] = 0 if not stack else len(stack)-i
+        stack.append(i)
+        
+     return ans
+```
+
+#### 9.2.2 循环数组下一个最大值
+
+有了环形属性之后，问题的难点在于这个Next的意义不仅仅是当前元素的右边了，有可能出现在当前元素的左边。
+
+可以将原始数组翻倍，在后面再接一个原始数组。（假装这个数组翻倍了）
+
+[2,1,2,4,3  ||   2,1,2,4,3]
+
+[503. 下一个更大元素 II](https://leetcode-cn.com/problems/next-greater-element-ii/)
+
+如下利用取余来得到相应数字
+
+```python
+class Solution:
+    def nextGreaterElements(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        ans = [-1] * n
+        stack = []
+
+        for i in range(2*n - 1, -1, -1):
+            while stack and nums[i % n] >= stack[-1]:
+                stack.pop()
+            ans[i % n] = -1 if not stack else stack[-1]
+            stack.append(nums[i % n])
+
+        return ans
+```
+
+#### 9.2.3 两个数组中下一个更大元素
+
+[496. 下一个更大元素 I](https://leetcode-cn.com/problems/next-greater-element-i/)
+
+> Nums1，nums2，求nums1各个元素对应在nums2中下一个更大的元素
+
+与上面的区别在于用了两个数组，可能得考虑用哈希表来存储一下。
+
+```python
+class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        dict_nums1 = {}
+        m, n = len(nums1), len(nums2)
+        stack = []
+
+        for i in range(n-1, -1, -1):
+            while len(stack) != 0 and nums2[i] >= stack[-1]:
+                stack.pop()
+            dict_nums1[nums2[i]] = -1 if len(stack) == 0 else stack[-1]
+            stack.append(nums2[i])
+
+        return [dict_nums1[i] for i in nums1]
+```
+
+
+
+### 9.3 单调队列
+
+> 给定一个数组 *nums*，有一个大小为 *k* 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 *k* 个数字。滑动窗口每次只向右移动一位。
+>
+> 返回滑动窗口中的最大值。
+
+```
+输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+输出: [3,3,5,5,6,7]
 ```
 
