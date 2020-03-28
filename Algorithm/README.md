@@ -622,7 +622,9 @@ def sink(k):
 
 ### 9.1 栈、队列的互相实现
 
+[232. 用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
+[225. 用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
 
 ### 9.2 单调栈
 
@@ -706,6 +708,8 @@ class Solution:
 
 ### 9.3 单调队列
 
+[239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
 > 给定一个数组 *nums*，有一个大小为 *k* 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 *k* 个数字。滑动窗口每次只向右移动一位。
 >
 > 返回滑动窗口中的最大值。
@@ -713,5 +717,146 @@ class Solution:
 ```
 输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
 输出: [3,3,5,5,6,7]
+```
+
+定义一个单调队列类，每次移动窗口的时候，第k个元素进入window后判断前面的值是否比他小，如果小就没必要留下来了，直接压走弹出队列。直到遇到一个大的数（类似单调栈）时，停止。当窗口进行下一此移动的时候，需要判断当前窗口最左端是否为max，当然你可以直接判断，也可以看一下目前的队列首端是否为窗口最左端，如果正好是的，也可以放心去pop。否则不需要pop了，因为早已经被pop掉了。因此单调队列需要实现:
+
++ `push`: window右侧压入元素，将比他小的值都剔除
++ `max`:求当前window中的最大值，即队列首端元素
++ `pop`: 将window最多端元素剔除掉，假设这个值和队列首元素不一样，说明早就被淘汰了。否则，可以安心去pop。
+
+```python
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        window = MonotonicQueue()
+        res = []
+        for i, num in enumerate(nums):
+            if i < k - 1:
+                window.push(num)
+            else:
+                window.push(num)
+                res.append(window.max())
+                window.pop(nums[i - k + 1])
+        return res
+
+
+class MonotonicQueue:
+
+    def __init__(self):
+        self.queue = deque()
+
+    def push(self, x):
+        while self.queue and self.queue[-1] < x:
+            self.queue.pop()
+        self.queue.append(x)
+
+    def pop(self, x):
+        if self.queue and self.queue[0] == x:
+            self.queue.popleft()
+
+    def max(self):
+        return self.queue[0]
+```
+
+## 10. 链表
+
+### 10.1 反转链表
+
+将单链表进行反转，可以使用前后指针的方式，每次将curr指针的next指向pred指针。
+
+#### 双指针方式
+
+```python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        pre = None
+        curr = head
+
+        while curr:
+            tmp = curr.next
+            curr.next = pre
+            pre = curr
+            curr = tmp
+        return pre
+```
+
+#### 递归方式
+
++ 翻转整个链表
+
+  将单链表整个的翻转过来
+
+```
+1. base case: 单个节点的时候，返回头结点
+2. 后续递归里，返回一个新的头结点last，而head变为了最后一个元素
+```
+
+```python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        if not head or head.next is None:
+            return head
+        last = self.reverseList(head.next)
+        head.next.next = head
+        head.next = None
+        return last
+```
+
++ 翻转链表的前N个节点
+
+```python
+def reverseList(head,n):
+  if not head or not head.next:
+    return head
+  if n==1:
+    return head
+  last = reverseList(head.next, n-1)
+  successor = head.next.next
+  head.next.next = head
+  head.next =successor
+  return last
+```
+
++ 翻转链表的某个区间
+
+```python
+class Solution:
+    def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+        def reverseN(head, n):
+            if n == 1:
+                return head
+            last = reverseN(head.next, n - 1)
+            successor = head.next.next
+            head.next.next = head
+            head.next = successor
+            return last
+
+        if m == 1:
+            return reverseN(head, n)
+        head.next = self.reverseBetween(head.next, m - 1, n - 1)
+        return head
+```
+
+非递归方式:
+
+```python
+class Solution:
+    def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+        dummy = ListNode(-1)
+        dummy.next = head
+        pre = dummy
+
+        for i in range(m - 1):
+            pre = pre.next
+
+        start = pre.next
+        tail = start.next  # 待变动插入的节点
+
+        for i in range(n - m):
+            start.next = tail.next
+            tail.next = pre.next
+            pre.next = tail
+            tail = start.next
+        return dummy.next
 ```
 
