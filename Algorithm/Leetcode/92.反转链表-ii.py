@@ -64,8 +64,8 @@ class Solution:
 
         for i in range(n - m):
             start.next = tail.next
+            tail.next = pre.next
             pre.next = tail
-            tail.next = start
             tail = start.next
         return dummy.next
 # @lc code=end
