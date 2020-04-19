@@ -774,7 +774,7 @@ class MonotonicQueue:
 
 ### 10.1 反转链表
 
-将单链表进行反转，可以使用前后指针的方式，每次将curr指针的next指向pred指针。
+将单链表进行反转，可以使用前后指针的方式，每次将curr指针的next指向pre指针。
 
 #### 双指针方式
 
@@ -796,6 +796,8 @@ class Solution:
 
 + 翻转整个链表
 
+  [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
+  
   将单链表整个的翻转过来
 
 ```
@@ -870,5 +872,44 @@ class Solution:
             pre.next = tail
             tail = start.next
         return dummy.next
+```
+
+### 10.2 旋转链表
+
+[61. 旋转链表](https://leetcode-cn.com/problems/rotate-list/)
+
+> 给定一个链表，旋转链表，将链表每个节点向右移动 *k* 个位置，其中 *k* 是非负数。
+
+```python
+class Solution:
+    def rotateRight(self, head: ListNode, k: int) -> ListNode:
+        # 首先计算一下链表的长度
+        def length(head):
+            l = 0
+            while head:
+                head = head.next
+                l += 1
+            return l
+
+        if not head or not head.next:
+            return head
+
+        # 真实需要移动的次数
+        l = length(head)
+        cnt = k % l
+
+        cur = head
+        for i in range(l - cnt - 1):
+            cur = cur.next
+
+        tail = cur
+        while tail.next:
+            tail = tail.next
+
+        tail.next = head
+        head = cur.next
+        cur.next = None
+
+        return head
 ```
 
