@@ -59,4 +59,27 @@ class Solution:
         res = max(dp_length)
         return sum([dp_count[i] for i in range(n) if dp_length[i] == res])
 
+
+# class Solution:
+#     def findNumberOfLIS(self, nums: List[int]) -> int:
+#         n = len(nums)
+#         if n == 0:
+#             return 0
+#         dp_length = [1] * len(nums)
+#         dp_count = [1] * len(nums)
+
+#         for i in range(1, n):
+#             for j in range(i):
+#                 if nums[i] > nums[j]:
+#                     if dp_length[j] + 1 > dp_length[i]:
+#                         # 如果第一次发现出现更大的数
+#                         dp_length[i] = dp_length[j] + 1
+#                         dp_count[i] = dp_count[j]
+#                     elif dp_length[j] + 1 == dp_length[i]:
+#                         # 如果不是第一次发现
+#                         dp_count[i] += dp_count[j]
+
+#         max_length = max(dp_length)
+#         return sum([dp_count[i] for i in range(n) if dp_length[i] == max_length])
+
 # @lc code=end

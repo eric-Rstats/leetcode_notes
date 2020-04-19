@@ -36,33 +36,35 @@ from collections import Counter
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
         left, right, start = 0, 0, 0
-        minLen = float('inf')
         needs = dict(Counter(t))
         window = {item: 0 for item in needs}
         match = 0
+        minLen = float('inf')
 
         while right < len(s):
             c1 = s[right]
             if c1 in needs:
                 window[c1] += 1
                 if window[c1] == needs[c1]:
-                    # 如果出现次数对上了
                     match += 1
-            #right += 1
 
             while match == len(needs):
-                # 如果都找到了，需要把left移动了
+                # 如果对应完了，需要移动一下left
                 if minLen > right - left + 1:
+                    # 如果当前最短子串长度，大于当前窗口长度
                     start = left
                     minLen = right - left + 1
+
                 c2 = s[left]
                 if c2 in needs:
                     window[c2] -= 1
                     if window[c2] < needs[c2]:
                         match -= 1
+
                 left += 1
 
             right += 1
+
         return "" if minLen == float('inf') else s[start:start+minLen]
 
 

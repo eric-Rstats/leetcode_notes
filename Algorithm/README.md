@@ -6,6 +6,338 @@ Fucking-Alogorithm学习笔记: https://labuladong.gitbook.io/algo/
 
 ## 1. 动态规划
 
+### 1.1 动态规划解题框架
+
+穷举存在重叠的子问题，比如某些递归过程中，产生了许多多余计算。
+
+使用备忘录存储一些子问题的结果，可以是自顶向下的，也可以是由下向上的。
+
+以找零钱问题为例子:
+
+> 给你 `k` 种面值的硬币，面值分别为 `c1, c2 ... ck`，每种硬币的数量无限，再给一个总金额 `amount`，问你**最少**需要几枚硬币凑出这个金额，如果不可能凑出，算法返回 -1 
+
+> **先确定「状态」**，也就是原问题和子问题中变化的变量。由于硬币数量无限，所以唯一的状态就是目标金额 `amount`。
+>
+> **然后确定** **`dp`** **函数的定义**：当前的目标金额是 `n`，至少需要 `dp(n)` 个硬币凑出该金额。
+>
+> **然后确定「选择」并择优**，也就是对于每个状态，可以做出什么选择改变当前状态。具体到这个问题，无论当的目标金额是多少，选择就是从面额列表 `coins` 中选择一个硬币，然后目标金额就会减少：
+>
+> **最后明确 base case**，显然目标金额为 0 时，所需硬币数量为 0；当目标金额小于 0 时，无解，返回 -1
+
+```python
+def coinChange(coins, amount):
+    dp = [float('inf')] * (amount+1)
+    dp[0] = 0
+    for coin in coins:
+        for x in range(coin, amount+1):
+            dp[x] = min(dp[x], dp[x-coin]+1)
+            
+     return dp[amount] if dp[amount] != float('inf') else -1
+      
+```
+
+### 1.2 最长递增子序列
+
+子序列不一定是连续的，子串一定是连续的。
+
+> 给定一个未排序的整数数组，找到最长递增子序列的长度。
+
+定义dp[i]为截至索引i的最长递增子序列的长度
+
+```python
+def findMaxSeq(nums):
+    
+    dp = [1] * len(nums)
+    
+    for i in range(1,len(nums)):
+        for j in range(i):
+           if nums[i] > nums[j]:
+              dp[i] = max(dp[j] + 1, dp[i])
+
+     return max(dp)
+```
+
+
+
+变种：计算最长自增子串的长度。子串的话，就是连续的:[674. 最长连续递增序列](https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/)
+
+```python
+class Solution:
+    def findLengthOfLCIS(self, nums: List[int]) -> int:
+        n = len(nums)
+        if not nums or n < 0:
+            return 0
+        dp = [1] * n
+
+        for i in range(1, n):
+            if nums[i] > nums[i - 1]:
+                dp[i] = dp[i - 1] + 1
+
+        return max(dp)
+```
+
+变种：[673. 最长递增子序列的个数](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
+
+> 给定一个未排序的整数数组，找到最长递增子序列的个数。
+>
+> 示例 1:
+>
+> 输入: [1,3,5,4,7]
+> 输出: 2
+> 解释: 有两个最长递增子序列，分别是 [1, 3, 4, 7] 和[1, 3, 5, 7]。
+
+不仅需要计算递增子序列，还需要统计这样的递增子序列出现过多少次。因为有可能会有很多次。
+
++ 如果dp_length[i] 小于 dp_length[j]+1，那么说明第一次遇到他，对长度进行+1，同时出现次数与j处一样
++ 如果dp_length[i] 等于 dp_length[j]+1，那么说明前面已经有j出现过这种情况。那么此处的count继承j的count，进行累加
+
+```python
+class Solution:
+    def findNumberOfLIS(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 0: return 0
+        dp_length = [1] * len(nums)
+        dp_count = [1] * len(nums)
+
+        for i in range(1, n):
+            for j in range(i):
+                if nums[i] > nums[j]:
+                    if dp_length[j] + 1 > dp_length[i]:
+                        # 如果第一次发现出现更大的数
+                        dp_length[i] = dp_length[j] + 1
+                        dp_count[i] = dp_count[j]
+                    elif dp_length[j] + 1 == dp_length[i]:
+                        # 如果不是第一次发现
+                        dp_count[i] += dp_count[j]
+
+        max_length = max(dp_length)
+        return sum([dp_count[i] for i in range(n) if dp_length[i]==max_length])
+```
+
+### 1.3 0-1背包问题
+
+> 给定一个宝宝可以承载W重量的物品，有N种物品，每一个重量和价值二元组 {w_i, v_i}，求出背包种的最大价值。注意物品的个数是无限的
+
+解析：问题在于如何定义状态转移方程，定义 $dp[c][w]$ 为前c个物品，当前容量为w的时候，可以装的最大价值
+
+```python
+def myfunc(W,N,wt_list,val_list):
+    dp = [0 for _ in range(W)] * N
+    
+    for i in range(1, N):
+        for w in range(1, W):
+            if w-wt_list[i] < 0:
+                # 此时只能不放
+                dp[i][w] = dp[i-1][w]
+            else:
+                dp[i][w] = max(dp[i-1][w], dp[i-1][w-wt_list[i-1]]+val_list[i])
+    
+```
+
+### 1.4 编辑距离
+
+> 给你两个单词 word1 和 word2，请你计算出将 word1 转换成 word2 所使用的最少操作数 。
+>
+> 你可以对一个单词进行如下三种操作：
+>
+> 插入一个字符
+> 删除一个字符
+> 替换一个字符
+
+[72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
+
+<img src="img/image-20200419173135539.png" alt="image-20200419173135539" style="zoom:33%;" />
+
+```python
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        m = len(word1)
+        n = len(word2)
+        if m == 0 or n == 0:
+            return n + m
+
+        dp = [[0 for _ in range(n+1)] for _ in range(m+1)]
+
+        # base score
+        dp[0] = [i for i in range(n+1)]
+        
+        for j in range(m+1):
+            dp[j][0] = j
+
+
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+1)
+
+        return dp[m][n]
+```
+
+相关代码一道:[面试题 01.05. 一次编辑](https://leetcode-cn.com/problems/one-away-lcci/)
+
+> 字符串有三种编辑操作:插入一个字符、删除一个字符或者替换一个字符。 给定两个字符串，编写一个函数判定它们是否只需要一次(或者零次)编辑。
+
+```python
+class Solution:
+    def oneEditAway(self, first: str, second: str) -> bool:
+        m = len(first)
+        n = len(second)
+
+        if m<n:
+            first, second = second, first # 保证first更长
+            m,n=n,m
+        
+        if m-n>1:
+            # 如果相差超过1，不可能
+            return False
+        
+        
+        for i in range(n):
+            if first[i] != second[i]:
+                # 如果出现不一样了，看看是删除，还是修改可以成功
+                return first[i+1:] == second[i+1:] or first[i+1:] == second[i:]
+        
+        return True # 其余情况
+```
+
+### 1.5 高楼摔鸡蛋
+
+#### 1.5.1 普通解法
+
+最坏情况下的，最少扔鸡蛋次数：最坏情况指的是最后一次鸡蛋才碎。最少扔鸡蛋次数指的是哪种策略更好。
+
+定义N层楼，K个鸡蛋，最差需要m次。
+
+$$dp[k][N]=min(res, max(dp[k][N-i], dp[k-1][i-1])+1)$$
+
++ 在第i层，如果鸡蛋碎了，去下一层扔
++ 如果没碎，去上一层扔
+
+
+
+```python
+def superEggDrop(K, N):
+    memo = dict()
+    def dp(K,N):
+        if K==1:return N
+        if N==0:return 0
+        
+        if (K,N) in memo:
+            return memo([(K,N)])
+        res = float('inf')
+        for i in range(1, N+1):
+            res = min(res, max(dp(K, N-i), dp(K-1, i-1))+1)
+        memo[(K,N)] = res
+        return res
+    
+    return dp(K,N)
+```
+
+#### 1.5.2 二分法减少时间复杂度
+
+dp(K, N-i), dp(K-1, i-1)看做是i的函数，前者单调递减，后者单调递增。
+
+因此所谓求取最大值的最小值，其实就是选取二者的交点。
+
+```python
+def superEggDrop(K, N):
+    memo = dict()
+    def dp(K,N):
+        if K==1:return N
+        if N==0:return 0
+        
+        if (K,N) in memo:
+            return memo([(K,N)])
+        res = float('inf')
+        # 用二分法替代
+        lo, hi = 1, N
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            broken = dp(K-1, mid-1)
+            not_broken = dp(K, N-mid)
+            
+            if broken > not_broken:
+                hi = mid - 1
+                res = min(res, broken + 1)
+             else:
+                lo = mid + 1
+                res = min(res, not_broken+1)
+        
+        memo[(K,N)] = res
+        return res
+    
+    return dp(K,N)
+```
+
+
+
+#### 1.5.3 重新定义状态转移方程
+
+定义$dp[k][m]=F$为k个鸡蛋，最多允许试错m次，可以达到最高的楼层。
+
+
+
+```python
+def superEggDrop(K,N):
+    dp = [[0 for i in range(K+1)] for _ in range(N+1)]
+    m = 0
+    while dp[K][m] < N:
+        m += 1
+        for k in range(K+1):
+            dp[k][m] = dp[k-1][m-1] + dp[k][m-1] + 1
+     return m
+```
+
+同时可以只扫描一维列表，把m直接返回。
+
+```python
+class Solution:
+    def superEggDrop(self, K: int, N: int) -> int:
+        if K == 1:
+            return N
+        if N == 0:
+            return 0
+
+        dp = [0 for _ in range(K + 1)]
+
+        m = 0
+
+        while dp[K] < N:
+            for k in range(K, 0, -1):
+                dp[k] = dp[k] + dp[k - 1] + 1
+            m += 1
+
+        return m
+```
+
+### 1.6 最长公共子序列
+
+[1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)
+
+当两个字符串当前指针位置所指字符相同时，子序列长度+1；假如不相等，就得看保留哪一个，得到的最长。
+
+```python
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m = len(text1)
+        n = len(text2)
+
+        dp = [[0 for _ in range(n+1)] for _ in range(m+1)]
+
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if text1[i-1] == text2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]+1
+                else:
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+
+        return dp[m][n]
+```
+
+
+
 ## 2. 回溯算法
 
 ## 3. 二分查找
@@ -283,6 +615,10 @@ class Solution:
 利用快慢指针，如果有环，则快指针和慢指针必定会遭遇
 
 [141. 环形链表](https://leetcode-cn.com/problems/linked-list-cycle/)
+
+
+
+
 
 ```python
 class Solution:
