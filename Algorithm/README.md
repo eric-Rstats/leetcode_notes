@@ -336,6 +336,38 @@ class Solution:
         return dp[m][n]
 ```
 
+### 1.7 最长回文子序列
+
+考虑子序列不一定是连续的，首先需要定义一个转移方程，
+
+<img src="img/image-20200421232658237.png" alt="image-20200421232658237" style="zoom:50%;" />
+
+定义`dp[i][j]`为索引i到j的字符串最长回文子序列，假如i，j处字符相同，那么$dp[i][j]=dp[i+1][j-1]+2$,否则需要看哪一种情况下更大。
+
+<img src="img/image-20200421233106912.png" alt="image-20200421233106912" style="zoom:50%;" />
+
+```python
+class Solution:
+    def longestPalindromeSubseq(self, s: str) -> int:
+        n = len(s)
+        if n < 1:
+            return n
+        
+        dp = [[0]*n for _ in range(n)]
+
+        for i in range(n):
+            dp[i][i] = 1
+        
+        for i in range(n-2, -1, -1):
+            for j in range(i+1, n, 1):
+                if s[i] == s[j]:
+                    dp[i][j] = dp[i+1][j-1] + 2
+                else:
+                    dp[i][j] = max(dp[i+1][j], dp[i][j-1])
+
+        return dp[0][n-1]
+```
+
 
 
 ## 2. 回溯算法
