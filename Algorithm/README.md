@@ -368,6 +368,173 @@ class Solution:
         return dp[0][n-1]
 ```
 
+### 1.8 博弈问题 —— 石子游戏
+
+#### 1.8.1 石子游戏1——先后从最左和最右取石子
+
+> 你和你的朋友面前有一排石头堆，用一个数组 piles 表示，piles[i] 表示第 i 堆石子有多少个。你们轮流拿石头，一次拿一堆，但是只能拿走最左边或者最右边的石头堆。所有石头被拿完后，谁拥有的石头多，谁获胜。
+
+[877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
+
+分析：每次拿石头的时候，只能选择从最左边或者最右边进行拿。定义dp数组为$dp[i][j]$为当石碓是以i索引开始，j索引结束时，我们可以得到的最优得分。先手和后手各有一个值。
+
+base_score: 当只有一个石子的时候，先手得到$dp[i]$，后手得到0.
+
+转移方程问题:
+
+```shell
+dp[i][j].first表示先手可以得到的最高分数，同理dp[i][j].second表示后者可以得到的最高分数;
+
+
+每一次先手需要考虑的就是，取左边还是右边最佳。
+取左边=左边的分数+剩余dp[i+1][j].second即后手得到的分数
+取右边=右边的分数+剩余dp[i][j-1].second即后手得到的分数
+
+而后手则是等先手选择后，取剩余石子堆最优。
+```
+
+<img src="img/image-20200425144207824.png" alt="image-20200425144207824" style="zoom: 50%;" />
+
+```python
+class Solution:
+    def stoneGame(self, piles: List[int]) -> bool:
+        n = len(piles)
+        dp = [[Pairs(0, 0) for _ in range(n)] for _ in range(n)]
+
+        for i in range(n):
+            dp[i][i].fir, dp[i][i].sec = piles[i], 0
+
+        for i in range(n - 2, -1, -1):
+            for j in range(i + 1, n, 1):
+                left_choice = piles[i] + dp[i + 1][j].sec
+                right_choice = piles[j] + dp[i][j - 1].sec
+
+                if left_choice >= right_choice:
+                    dp[i][j].fir = left_choice
+                    dp[i][j].sec = dp[i + 1][j].fir
+                else:
+                    dp[i][j].fir = right_choice
+                    dp[i][j].sec = dp[i][j - 1].fir
+
+        return dp[0][n-1].fir > dp[0][n-1].sec
+
+
+class Pairs:
+
+    def __init__(self, fir, sec):
+        self.fir = fir
+        self.sec = sec
+```
+
+#### 1.8.2 石子游戏2
+
+[1140. 石子游戏 II](https://leetcode-cn.com/problems/stone-game-ii/)
+
++ 采用回溯方法
+
+每次轮到自己拿石子的时候，要在后继的所有状态中，选择对自己有利的。定义$dfs(i,M)$为从第i堆开始取，最多允许拿$1\leq x\leq 2*M$的时候，可以拿到的最大值。
+
+1. 如果$i\geq n$的时候，说明溢出了，返回0
+2. 如果$i+2M \geq n$说明最后可以一把拿来，可以直接返回$sun(piles[i:])$
+3. 如果不是这种情况，需要遍历$1\leq x\leq 2*M$种情况，求敌人最小化$dfs(i+x, max(x,M))$下，最多我们能拿多少。
+
+```python
+class Solution:
+    def stoneGameII(self, piles: List[int]) -> int:
+        n, memo = len(piles), dict()
+
+        # 定义s[i]为第i堆石子到最后一堆石子的总石子数
+        s = [0] * (n+1)
+        for i in range(n - 1, -1, -1):
+            s[i] = s[i + 1] + piles[i]
+
+        def dfs(i, M):
+            """定义从第i堆石子开始取，最多取M堆可以得到的最优值"""
+
+            if (i, M) in memo:
+                return memo[(i, M)]
+
+            if i >= n:
+                return 0
+            if i + M * 2 >= n:
+                return s[i]
+
+            best = 0
+            for x in range(1, M * 2 + 1):
+                best = max(best, s[i] - dfs(i + x, max(x, M)))
+
+            memo[(i, M)] = best
+            return best
+
+        return dfs(0, 1)
+
+#Your runtime beats 66.04 % of python3 submissions
+#Your memory usage beats 100 % of python3 submissions (14.1 MB)
+```
+
+#### 1.8.2 石子游戏3
+
+[1406. 石子游戏 III](https://leetcode-cn.com/problems/stone-game-iii/)
+
+有负数存在时, 要注意和第二题不同，可能最优的值小于0，因此best不能初始化为0
+
+```python
+# 参考石子游戏2
+class Solution:
+    def stoneGameIII(self, stoneValue: List[int]) -> str:
+
+        n = len(stoneValue)
+        memo = dict()
+
+        # 以s[i]定义从i开始后续所有石子的得分总值
+        s = [0] * (n+1)
+        for i in range(n-1, -1, -1):
+            s[i] = stoneValue[i] + s[i+1]
+
+
+        def dfs(i):
+
+            if i in memo:
+                return memo[i]
+            if i >= n:
+                return 0
+            
+            res1 = s[i]-dfs(i+1)
+            res2 = s[i]-dfs(i+2)
+            res3 = s[i]-dfs(i+3)
+
+            memo[i] = max(res1, res2, res3)
+            return memo[i]
+        
+        alice = dfs(0)
+        bob = s[0] - alice
+        if alice > bob:return 'Alice'
+        elif alice < bob:return 'Bob'
+        else: return 'Tie'
+```
+
+参考网友版本:要想使得我们最高，只需要在后面+1，+2，+3的地方数值最小即可，就是留最少的东西给别人。同时此段代码在初始化的时候在dp末尾填上最大值，防止溢出报错。
+
+```python
+class Solution:
+    def stoneGameIII(self, stoneValue: List[int]) -> str:
+
+        n = len(stoneValue)
+        dp = [0 for i in range(n+1)] + [1000]*4
+        su = 0
+
+        for i in range(n-1, -1, -1):
+            su += stoneValue[i]
+            res = min(dp[i+1], dp[i+2], dp[i+3])
+            dp[i] = su - res
+
+        if dp[0]+dp[0]<su:
+            return "Bob"
+        elif dp[0]+dp[0]>su:
+            return "Alice"
+        return "Tie"
+```
+
 
 
 ## 2. 回溯算法
