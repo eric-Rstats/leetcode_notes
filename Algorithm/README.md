@@ -539,6 +539,235 @@ class Solution:
 
 ## 2. 回溯算法
 
+#### 2.1 回溯算法解题框架
+
+回溯过程实际上就是一个决策树的遍历过程，主要包含：
+
++ 路径：已经做出的选择
++ 选择列表：当前还可以做的选择
++ 结束条件：到达决策树底层，无法再做选择的条件
+
+```python
+result = []
+def backtrack(路径, 选择列表):
+    if 满足结束条件:
+        result.add(路径)
+        return
+
+    for 选择 in 选择列表:
+        做选择
+        backtrack(路径, 选择列表)
+        撤销选择
+```
+
+#### 2.2 全排列问题
+
++ 普通排列问题：输出一个序列的所有排列
+
+```python
+def permute(nums):
+    n = len(nums)
+    flag = [0] * n
+    result = []
+    drawback(nums, [])
+    return result
+    
+    def drawback(nums, path):
+        if len(path) == n:
+            result.append(path.copy())
+            return
+            
+        for i, num in enumerate(nums):
+            if flag[i]==0:
+                flag[i]=1
+                path.append(num)
+                drawback(nums, path)
+                path.pop()
+                flag[i]=0
+                
+     
+```
+
++ 全排列2：输出序列的一个排列，同时不能有重复的序列出现。
+
+剪枝的时候，将与前一个元素相同，同时前一个元素刚刚撤销选择的进行剔除。
+
+<img src="img/image-20200426151151130.png" alt="image-20200426151151130" style="zoom:50%;" />
+
+```python
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        result = []
+        flag = [0] * len(nums)
+
+        def drawback(nums, path):
+            if len(nums) == len(path):
+                result.append(path.copy())
+                return
+
+            for i, num in enumerate(nums):
+                if flag[i] == 1:
+                    continue
+                if num == nums[i - 1] and i > 0 and flag[i - 1] == 0:
+                    continue
+
+                path.append(num)
+                flag[i] = 1
+                drawback(nums, path)
+                flag[i] = 0
+                path.pop()
+
+        drawback(nums, [])
+        return result
+```
+
+
+
+#### 2.3  组合问题
+
+找出1-n数组产生的组合数，树的剪枝条件是当前path长度等于k。
+
+```python
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        # 组合其实就是限制了树深的DFS
+        result = []
+        flag = [0] * n
+
+        def drawback(n, k, start, path):
+            if k == len(path):
+                result.append(path.copy())
+                return
+
+            for i in range(start, n):
+                if flag[i] == 1:
+                    continue
+                path.append(i + 1)
+                flag[i] = 1
+                drawback(n, k, i + 1, path)
+                path.pop()
+                flag[i] = 0
+
+        drawback(n, k, 0, [])
+        return result
+```
+
++ 组合问题
+
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+
+        result = []
+        candidates.sort()
+
+        def drawback(candidates, start, target, path):
+            if target == 0:
+                result.append(path.copy())
+
+            for i in range(start, len(candidates)):
+                residus = target - candidates[i]
+                if residus < 0:
+                    break
+                path.append(candidates[i])
+                drawback(candidates, i, residus, path)
+                path.pop()
+        drawback(candidates, 0, target, [])
+        return result
+```
+
+
+
+
+
++ 组合问题2
+
+```python
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        result = []
+        n = len(candidates)
+        flag = [0] * n
+        candidates.sort()
+
+        def drawback(candidates, target, start, path):
+            if target == 0:
+                result.append(path.copy())
+                return
+
+            for i in range(start, n):
+                if flag[i] == 1:
+                    continue
+                if i > 0 and candidates[i] == candidates[i - 1] and flag[i - 1] == 0:
+                    continue
+                residual = target - candidates[i]
+                if residual < 0:
+                    break
+                path.append(candidates[i])
+                flag[i] = 1
+                drawback(candidates, residual, i + 1, path)
+                path.pop()
+                flag[i] = 0
+
+        drawback(candidates, target, 0, [])
+        return result
+
+```
+
+
+
++ 组合问题3
+
+```python
+class Solution:
+    def combinationSum3(self, k: int, n: int) -> List[List[int]]:
+        result = []
+        flag = [0] * 9
+
+        def drawback(k, target, path, curr):
+            if len(path) == k and target == 0:
+                result.append(path.copy())
+                return
+
+            for i in range(curr, 9):
+                residual = target - i - 1
+                if residual < 0:
+                    break
+                flag[i] = 1
+                path.append(i+1)
+                drawback(k, residual, path, i+1)
+                path.pop()
+                flag[i] = 0
+
+        drawback(k, n, [], 0)
+        return result
+```
+
+
+
++ 组合问题4
+
+```python
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        # 类似零钱兑换问题
+        if target <= 0:
+            return 0
+        dp = [0] * (target + 1)
+
+        dp[0] = 1
+
+        for i in range(target + 1):
+            for num in nums:
+                if i - num >= 0:
+                    dp[i] += dp[i - num]
+
+        return dp[target]
+```
+
+
+
 ## 3. 二分查找
 
 ### 3.1 基础框架
