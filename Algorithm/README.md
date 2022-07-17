@@ -1677,3 +1677,86 @@ class Solution:
         return head
 ```
 
+
+
+## 11.重复数字
+
+查找列表中重复数字，多种不同要求下对应不同解法
+
+### 11.1 找出任意一组重复数字
+
+[剑指 Offer 03. 数组中重复的数字](https://leetcode.cn/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/)
+
+```python
+# 利用数组交换来定位重复数字
+class Solution:
+    def findRepeatNumber(self, nums: List[int]) -> int:
+        for i in range(len(nums)):
+            while nums[i] != i:
+                index = nums[i]
+                if nums[index] == index:
+                    return index
+
+                tmp = nums[i]
+                nums[i] = nums[index]
+                nums[index] = tmp
+```
+
+### 11.2 只有一个重复数字，用O(1)空间复杂度解决
+
+[287. 寻找重复数](https://leetcode.cn/problems/find-the-duplicate-number/)
+
+```python
+# 二分查找方式:1~n多次二分，如果大于等于mid的元素个数大于mid，说明重复的数比mid要小，继续二分
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        start = 0
+        end = len(nums) - 1
+        while end > start:
+            mid = (end + start) // 2
+            c = sum([1 for i in nums if i <= mid])
+            if c > mid:
+                end = mid
+            else:
+                start = mid + 1
+        
+        return start
+    
+# 快慢指针：是否有重复 等价于 链表是否有环；
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        # 快慢指针
+        slow,fast = 0, 0
+
+        while True:
+            slow = nums[slow]
+            fast = nums[nums[fast]]
+
+            if slow == fast:
+                break
+
+        fast = 0
+        while slow != fast:
+            slow = nums[slow]
+            fast = nums[fast]
+
+        return slow
+```
+
+
+
+### 11.3 输出所有重复数字的集合
+
+[442. 数组中重复的数据](https://leetcode.cn/problems/find-all-duplicates-in-an-array/)
+
+```python
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        for i in range(len(nums)):
+            while nums[i] != nums[nums[i]-1]:
+                nums[nums[i]-1], nums[i]  = nums[i], nums[nums[i]-1]
+
+        return [value for i, value in enumerate(nums) if value -1 != i]
+
+```
+
