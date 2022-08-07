@@ -1760,3 +1760,19 @@ class Solution:
 
 ```
 
+
+
+## 附录
+
+| 类型               | 题目列表                                                     | 备注 |
+| :----------------- | ------------------------------------------------------------ | ---- |
+| 二分查找           | [704. 二分查找](https://leetcode.cn/problems/binary-search/) [374. 猜数字大小](https://leetcode.cn/problems/guess-number-higher-or-lower/) [35. 搜索插入位置 ](https://leetcode.cn/problems/search-insert-position/) [278. 第一个错误的版本](https://leetcode.cn/problems/first-bad-version/) [367. 有效的完全平方数](https://leetcode.cn/problems/valid-perfect-square/) | √    |
+|                    | [69. x 的平方根 ](https://leetcode.cn/problems/sqrtx/) , [367. 有效的完全平方数](https://leetcode.cn/problems/valid-perfect-square/), [441. 排列硬币](https://leetcode.cn/problems/arranging-coins/) | √    |
+| 二分查找应用(中等) | [34. 在排序数组中查找元素的第一个和最后一个位置](https:/leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/) , [540. 有序数组中的单一元素 ](https://leetcode.cn/problems/single-element-in-a-sorted-array/),[275. H 指数 II](https://leetcode.cn/problems/h-index-ii/) , [436. 寻找右区间](https://leetcode.cn/problems/find-right-interval/) | √    |
+|                    | [300](https://leetcode.cn/problems/longest-increasing-subsequence/)、[354](https://leetcode.cn/problems/russian-doll-envelopes/)、[658](https://leetcode.cn/problems/find-k-closest-elements/)、[162](https://leetcode.cn/problems/find-peak-element/)、[4](https://leetcode.cn/problems/median-of-two-sorted-arrays/) |      |
+| 二分查找与旋转数组 | [153](https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/) [154](https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/)、[33](https://leetcode.cn/problems/search-in-rotated-sorted-array/)、[81](https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/) |      |
+| 二分查找与矩阵     | [74](https://leetcode.cn/problems/search-a-2d-matrix/)、[240](https://leetcode.cn/problems/search-a-2d-matrix-ii/) |      |
+| 二分答案法         | [378](https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/)、[668](https://leetcode.cn/problems/kth-smallest-number-in-multiplication-table/)、[410](https://leetcode.cn/problems/split-array-largest-sum/)、[483](https://leetcode.cn/problems/smallest-good-base/) |      |
+
+
+
