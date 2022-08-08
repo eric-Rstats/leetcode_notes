@@ -6,6 +6,7 @@
 
 # @lc code=start
 
+
 class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:
         left = 0
