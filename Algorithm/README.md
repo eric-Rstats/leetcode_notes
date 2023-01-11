@@ -2,7 +2,6 @@
 
 # LeetCode学习笔记
 
-Fucking-Alogorithm学习笔记: https://labuladong.gitbook.io/algo/
 
 ## 1. 动态规划
 
