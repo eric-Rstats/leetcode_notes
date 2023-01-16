@@ -43,15 +43,34 @@ class Solution:
     def longestCommonPrefix(self, strs: List[str]) -> str:
         # 当前最长公共前缀长度
 
+        # len_str = [len(s) for s in strs]
+        # min_len = 0 if len(len_str) == 0 else min(len_str)
+        # cnt_str = len(strs)  # 字符串数组的长度
+        # if min_len == 0:
+        #     return ""
+        # for i in range(min_len):
+        #     tmp = strs[0][i]
+        #     for j in range(1, cnt_str, 1):
+        #         if strs[j][i] != tmp:
+        #             return strs[0][:i]
+        # return strs[0][:i+1]
+        # 版本1
+        cnt_str = len(strs)
         len_str = [len(s) for s in strs]
-        min_len = 0 if len(len_str) == 0 else min(len_str)
-        cnt_str = len(strs)  # 字符串数组的长度
-        if min_len == 0:
-            return ""
+        min_len = 0 if cnt_str == 0 else min(len_str)
         for i in range(min_len):
-            tmp = strs[0][i]
-            for j in range(1, cnt_str, 1):
-                if strs[j][i] != tmp:
+            for j in range(1, cnt_str):
+                if strs[j][i] != strs[0][i]:
                     return strs[0][:i]
-        return strs[0][:i+1]
+        return strs[0][:min_len]
+
+        # 版本2:字典序排序(有不同的肯定会排在最小或者最大)
+        if not strs:
+            return ""
+        str0 = min(strs)
+        str1 = max(strs)
+        for i in range(len(str0)):
+            if str0[i] != str1[i]:
+                return str0[:i]
+        return str0
         # @lc code=end
