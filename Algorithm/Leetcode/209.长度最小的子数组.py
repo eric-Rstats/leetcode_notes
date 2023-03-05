@@ -32,50 +32,46 @@
 class Solution:
     def minSubArrayLen(self, s: int, nums: List[int]) -> int:
         # 版本1:滑动窗口
-        # n = len(nums)
-        # res = n + 1
-        # left = right = 0
-        # total = 0
-        # while right < n:
-        #     total += nums[right]
-        #     while total >= s:
-        #         res = min(res, right - left + 1)
-        #         total -= nums[left]
-        #         left += 1
-
-        #     right += 1
-
-        # return 0 if res == n + 1 else res
-
-        # 版本2: 前缀和+二分查找
-        def bisect_search(target, nums, l, r):
-            while l < r:
-                mid = (l + r) // 2
-                if nums[mid] < target:
-                    l = mid + 1
-                else:
-                    r = mid
-            return l if nums[l] >= target else -1
-
-        presum = [0]
+        left = right = total = 0
         n = len(nums)
         res = n + 1
-        # 前缀和
-        for num in nums:
-            presum.append(presum[-1] + num)
-        for i in range(1, n + 1):
-            target = presum[i - 1] + s
-            l, r = i, n
-            while l < r:
-                mid = (l + r) // 2
-                if presum[mid] >= target:
-                    r = mid
-                else:
-                    l = mid + 1
-            if presum[l] >= target:
-                # 可能没有搜寻到
-                res = min(res, l - i + 1)
-        return res if res < n + 1 else 0
+        while right < n:
+            total += nums[right]
+            while total >= s:
+                res = min(res, right-left+1)
+                total -= nums[left]
+                left += 1
+            right += 1
+        return 0 if res == n + 1 else res
 
+        # 版本2: 前缀和+二分查找
+        # def bisect_search(target, nums, l, r):
+        #     while l < r:
+        #         mid = (l + r) // 2
+        #         if nums[mid] < target:
+        #             l = mid + 1
+        #         else:
+        #             r = mid
+        #     return l if nums[l] >= target else -1
 
-# @lc code=end
+        # presum = [0]
+        # n = len(nums)
+        # res = n + 1
+        # # 前缀和
+        # for num in nums:
+        #     presum.append(presum[-1] + num)
+        # for i in range(1, n + 1):
+        #     target = presum[i - 1] + s
+        #     l, r = i, n
+        #     while l < r:
+        #         mid = (l + r) // 2
+        #         if presum[mid] >= target:
+        #             r = mid
+        #         else:
+        #             l = mid + 1
+        #     if presum[l] >= target:
+        #         # 可能没有搜寻到
+        #         res = min(res, l - i + 1)
+        # return res if res < n + 1 else 0
+
+        # @lc code=end

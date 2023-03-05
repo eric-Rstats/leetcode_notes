@@ -32,18 +32,12 @@
 
 class Solution:
     def twoSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[int]
-        """
-        # 首先用9减去这个列表
-        hashmap = {}
+        map = {}
         for index, num in enumerate(nums):
             tmp = target - num
-
-            if tmp in hashmap:
-                return [hashmap[tmp], index]
-            hashmap[num] = index
+            if tmp in map:
+                return [map[tmp], index]
+            else:
+                map[num] = index
         return None
 # @lc code=end
