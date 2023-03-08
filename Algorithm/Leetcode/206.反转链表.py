@@ -33,25 +33,25 @@
 #         self.next = None
 
 
-""" class Solution:
-    def reverseList(self, head: ListNode) -> ListNode:
-        pre = None
-        curr = head
-
-        while curr:
-            tmp = curr.next
-            curr.next = pre
-            pre = curr
-            curr = tmp
-        return pre """
-
-
 class Solution:
     def reverseList(self, head: ListNode) -> ListNode:
-        if not head or head.next is None:
-            return head
-        last = self.reverseList(head.next)
-        head.next.next = head
-        head.next = None
-        return last
+        pre = None
+        cur = head
+        while cur:
+            tmp = cur.next
+            cur.next = pre
+            pre = cur
+            cur = tmp
+        return pre
+
+
+
+# class Solution:
+#     def reverseList(self, head: ListNode) -> ListNode:
+#         if not head or head.next is None:
+#             return head
+#         last = self.reverseList(head.next)
+#         head.next.next = head
+#         head.next = None
+#         return last
 # @lc code=end
