@@ -75,6 +75,7 @@ class Solution:
     def maxScore(self, cardPoints: List[int], k: int) -> int:
         n = len(cardPoints)
         card_sum = sum(cardPoints)
+        # n-k窗口达到的最小值
         if n == k:
             return card_sum
         left, total = 0, 0

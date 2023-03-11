@@ -72,7 +72,8 @@ class Solution:
 
             if hashmap1 == hashmap2:
                 result.append(left)
-            if right >= len(p) - 1:
+            if right - left + 1 >= len(p):
+            # if right >= len(p) - 1:
                 head = s[left]
                 hashmap1[head] -= 1
                 if hashmap1[head] == 0:
