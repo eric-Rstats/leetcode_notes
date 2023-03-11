@@ -62,34 +62,53 @@ from collections import Counter
 
 class Solution:
     def findAnagrams(self, s: str, p: str) -> List[int]:
-        left, right, start = 0, 0, 0
-        needs = dict(Counter(p))
-        window = {item: 0 for item in needs}
-        match = 0
+        left = 0
         result = []
+        hashmap1 = {}
+        hashmap2 = Counter(p)
+        for right in range(len(s)):
+            tail = s[right]
+            hashmap1[tail] = hashmap1.get(tail, 0) + 1
 
-        while right < len(s):
-            c1 = s[right]
-            if c1 in needs:
-                window[c1] += 1
-                if window[c1] == needs[c1]:
-                    # 如果出现次数对上了
-                    match += 1
-            #right += 1
-
-            while match == len(needs):
-                # 如果都找到了，需要把left移动了
-                if len(p) == right - left + 1:
-                    result.append(left)
-                c2 = s[left]
-                if c2 in needs:
-                    window[c2] -= 1
-                    if window[c2] < needs[c2]:
-                        match -= 1
+            if hashmap1 == hashmap2:
+                result.append(left)
+            if right >= len(p) - 1:
+                head = s[left]
+                hashmap1[head] -= 1
+                if hashmap1[head] == 0:
+                    del hashmap1[head]
                 left += 1
-
-            right += 1
         return result
+
+
+        # left, right, start = 0, 0, 0
+        # needs = dict(Counter(p))
+        # window = {item: 0 for item in needs}
+        # match = 0
+        # result = []
+
+        # while right < len(s):
+        #     c1 = s[right]
+        #     if c1 in needs:
+        #         window[c1] += 1
+        #         if window[c1] == needs[c1]:
+        #             # 如果出现次数对上了
+        #             match += 1
+        #     #right += 1
+
+        #     while match == len(needs):
+        #         # 如果都找到了，需要把left移动了
+        #         if len(p) == right - left + 1:
+        #             result.append(left)
+        #         c2 = s[left]
+        #         if c2 in needs:
+        #             window[c2] -= 1
+        #             if window[c2] < needs[c2]:
+        #                 match -= 1
+        #         left += 1
+
+        #     right += 1
+        # return result
 
 
 # @lc code=end

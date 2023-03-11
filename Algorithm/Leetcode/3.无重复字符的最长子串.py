@@ -24,18 +24,34 @@
 # @lc code=en
 
 
+# class Solution:
+#     def lengthOfLongestSubstring(self, s: str) -> int:
+#         result = 0
+#         left = 0
+#         char_map = {}
+#         for right in range(len(s)):
+#             while s[right] in char_map:
+#                 char_map[s[left]] -= 1
+#                 if char_map[s[left]] == 0:
+#                     del char_map[s[left]]
+#                 left += 1
+#             char_map[s[right]] = 1
+
+#             result = max(result, right-left+1)
+#         return result
+
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        result = 0
-        left = 0
+        left, result = 0, 0
         char_map = {}
         for right in range(len(s)):
-            while s[right] in char_map:
+            char_map[s[right]] = char_map.get(s[right], 0) + 1
+            if len(char_map) == right - left + 1:
+                result = max(result, len(char_map))
+            while right - left + 1 > len(char_map):
                 char_map[s[left]] -= 1
                 if char_map[s[left]] == 0:
                     del char_map[s[left]]
                 left += 1
-            char_map[s[right]] = 1
-
-            result = max(result, right-left+1)
         return result
+

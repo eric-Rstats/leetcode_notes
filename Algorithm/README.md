@@ -1,4 +1,4 @@
-[toc]
+[TOC]
 
 # LeetCode学习笔记
 

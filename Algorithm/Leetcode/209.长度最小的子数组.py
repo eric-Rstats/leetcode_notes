@@ -31,18 +31,32 @@
 # @lc code=start
 class Solution:
     def minSubArrayLen(self, s: int, nums: List[int]) -> int:
-        # 版本1:滑动窗口
-        left = right = total = 0
+        left, total = 0, 0
         n = len(nums)
-        res = n + 1
-        while right < n:
+        result = n+1
+        for right in range(n):
             total += nums[right]
+            if total >= s:
+                result = min(right-left+1, result)
             while total >= s:
-                res = min(res, right-left+1)
+                result = min(right-left+1, result)
                 total -= nums[left]
                 left += 1
-            right += 1
-        return 0 if res == n + 1 else res
+        return 0 if result == n+1 else result
+
+
+        # # 版本1:滑动窗口
+        # left = right = total = 0
+        # n = len(nums)
+        # res = n + 1
+        # while right < n:
+        #     total += nums[right]
+        #     while total >= s:
+        #         res = min(res, right-left+1)
+        #         total -= nums[left]
+        #         left += 1
+        #     right += 1
+        # return 0 if res == n + 1 else res
 
         # 版本2: 前缀和+二分查找
         # def bisect_search(target, nums, l, r):
