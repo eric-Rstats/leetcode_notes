@@ -64,7 +64,7 @@ class Solution:
             if nums[right] % 2 == 1:
                 cnt += 1
             while cnt == k:
-                result += len(nums) - right
+                result += 1
                 if nums[left] % 2 == 1:
                     cnt -= 1
                 left += 1
