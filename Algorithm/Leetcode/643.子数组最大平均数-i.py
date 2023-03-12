@@ -55,12 +55,9 @@ class Solution:
         tmp, left = 0, 0
         # 窗口长度为k
         for right in range(len(nums)):
-            tmp += nums[right]
-
-            if right - left == k-1:
-                max_sum = max(max_sum, tmp)
-
+            tmp += nums[right]            
             if right >= k-1:
+                max_sum = max(max_sum, tmp)
                 tmp -= nums[left]
                 left += 1
 

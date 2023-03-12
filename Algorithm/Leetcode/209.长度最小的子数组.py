@@ -36,8 +36,7 @@ class Solution:
         result = n+1
         for right in range(n):
             total += nums[right]
-            if total >= s:
-                result = min(right-left+1, result)
+
             while total >= s:
                 result = min(right-left+1, result)
                 total -= nums[left]

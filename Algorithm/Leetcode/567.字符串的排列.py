@@ -7,9 +7,7 @@
 # @lc code=start
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
-        needs = {}
-        for item in s1:
-             needs[item] = needs.get(item, 0) + 1
+        needs = Counter(s1)
         n, m = len(s1), len(s2)
         window = {}
         left = 0
