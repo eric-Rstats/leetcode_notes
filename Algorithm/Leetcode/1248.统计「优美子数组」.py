@@ -64,7 +64,7 @@ class Solution:
             if nums[right] % 2 == 1:
                 cnt += 1
             while cnt == k:
-                result += 1
+                # 第一次满足条件时
                 if nums[left] % 2 == 1:
                     cnt -= 1
                 left += 1
