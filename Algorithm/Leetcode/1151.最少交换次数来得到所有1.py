@@ -12,7 +12,7 @@ class Solution:
     def minSwaps(self, data: List[int]) -> int:
         # 统计1的个数
         n = sum(data)
-        zeros, ones, left = 0, 0, 0
+        zeros, left = 0, 0, 0
         min_swap = inf 
 
         for right in range(len(data)):
