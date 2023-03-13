@@ -45,7 +45,6 @@ class Solution:
         return pre
 
 
-
 # class Solution:
 #     def reverseList(self, head: ListNode) -> ListNode:
 #         if not head or head.next is None:

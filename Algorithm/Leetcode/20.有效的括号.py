@@ -7,12 +7,12 @@
 # @lc code=start
 class Solution:
     def isValid(self, s: str) -> bool:
-        items = {"(": ")", "{": "}", "[": "]"}
         stack = []
-        for k in s:
-            if k in items:
-                stack.append(items[k])
-            elif not stack or stack[-1] != k:
+        hashmap = {'(': ')', '{': '}', '[': ']'}
+        for char in s:
+            if char in hashmap:
+                stack.append(hashmap[char])
+            elif not stack or stack[-1] != char:
                 return False
             else:
                 stack.pop()

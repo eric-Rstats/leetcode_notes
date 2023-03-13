@@ -38,16 +38,16 @@ class Solution:
             return l2
         if l2 is None:
             return l1
-        phead = ListNode(-1)  # 设置一个头结点，方便后面保存
-        p = phead
+        dummy = ListNode(-1)  # 设置一个头结点，方便后面保存
+        cur = dummy
         while l1 is not None and l2 is not None:
             if l1.val < l2.val:
-                p.next = l1
+                cur.next = l1
                 l1 = l1.next
             else:
-                p.next = l2
+                cur.next = l2
                 l2 = l2.next
-            p = p.next
-        p.next = l1 if l1 is not None else l2
-        return phead.next
+            cur = cur.next
+        cur.next = l1 if l1 is not None else l2
+        return dummy.next
         # @lc code=end
