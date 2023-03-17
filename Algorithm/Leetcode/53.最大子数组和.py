@@ -23,7 +23,7 @@ class Solution:
         dp[0] = nums[0]
         res = dp[0]
         for i in range(1, len(nums)):
-            # 到i的最长数组,要么是连续，要么是社区
+            # 到i的最长数组,要么是连续，要么是从头开始累积
             dp[i] = max(dp[i-1]+nums[i], nums[i])
             if dp[i] > res:
                 res = dp[i]
