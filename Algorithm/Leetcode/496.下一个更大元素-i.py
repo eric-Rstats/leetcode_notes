@@ -52,16 +52,16 @@
 
 class Solution:
     def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
-        dict_nums1 = {}
         m, n = len(nums1), len(nums2)
+        res = [-1 for _ in range(m)]
         stack = []
-
-        for i in range(n-1, -1, -1):
-            while len(stack) != 0 and nums2[i] >= stack[-1]:
-                stack.pop()
-            dict_nums1[nums2[i]] = -1 if len(stack) == 0 else stack[-1]
-            stack.append(nums2[i])
-
-        return [dict_nums1[i] for i in nums1]
+        for i, num in enumerate(nums2):
+            while stack and nums2[stack[-1]] < num:
+                pre = stack.pop()
+                if nums2[pre] in nums1:
+                    item = nums2[pre]
+                    res[nums1.index(item)] = num
+            stack.append(i)
+        return res
 
 # @lc code=end

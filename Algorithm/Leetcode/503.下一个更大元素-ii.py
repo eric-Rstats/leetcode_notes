@@ -39,11 +39,11 @@ class Solution:
         ans = [-1] * n
         stack = []
 
-        for i in range(2*n - 1, -1, -1):
-            while stack and nums[i % n] >= stack[-1]:
-                stack.pop()
-            ans[i % n] = -1 if not stack else stack[-1]
-            stack.append(nums[i % n])
+        for i in range(2*n):
+            while stack and nums[i % n] > nums[stack[-1]]:
+                pre = stack.pop()
+                ans[pre] = nums[i % n]
+            stack.append(i % n)
 
         return ans
 
