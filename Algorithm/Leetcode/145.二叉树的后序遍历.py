@@ -13,15 +13,32 @@
 #         self.right = right
 class Solution:
     def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        result = []
+        # result = []
 
-        def travel(root):
-            if not root:
-                return
-            travel(root.left)
-            travel(root.right)
-            result.append(root.val)
+        # def travel(root):
+        #     if not root:
+        #         return
+        #     travel(root.left)
+        #     travel(root.right)
+        #     result.append(root.val)
 
-        travel(root)
-        return result
+        # travel(root)
+        # return result
+        res = []
+        stack = []
+        if root:
+            stack = [root]
+        while stack:
+            cur = stack.pop()  # 栈顶
+            if cur:
+                stack.append(cur)
+                stack.append(None)
+                if cur.right:
+                    stack.append(cur.right)
+                if cur.left:
+                    stack.append(cur.left)
+            else:
+                # 当栈顶为空时，开始出栈
+                res.append(stack.pop().val)
+        return res
 # @lc code=end
