@@ -43,10 +43,29 @@
 
 class Solution:
     def maxDepth(self, root: TreeNode) -> int:
+        # 版本1:递归法
+        # if not root:
+        #     return 0
+        # else:
+        #     left_depth = self.maxDepth(root.left)
+        #     right_depth = self.maxDepth(root.right)
+        #     return max(left_depth, right_depth) + 1
+        # 版本2:层序遍历
         if not root:
             return 0
-        else:
-            left_depth = self.maxDepth(root.left)
-            right_depth = self.maxDepth(root.right)
-            return max(left_depth, right_depth) + 1
+        from collections import deque
+        que = deque([root])
+        depth = 0
+        while que:
+            depth += 1
+            for i in range(len(que)):
+                node = que.popleft()
+                if node.left:
+                    que.append(node.left)
+                if node.right:
+                    que.append(node.right)
+
+        return depth
+
+
 # @lc code=end

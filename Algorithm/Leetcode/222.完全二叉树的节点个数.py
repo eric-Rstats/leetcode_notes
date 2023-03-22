@@ -45,20 +45,36 @@
 
 class Solution:
     def countNodes(self, root: TreeNode) -> int:
-        hl, hr = 0, 0
-        left, right = root, root
+        # hl, hr = 0, 0
+        # left, right = root, root
 
-        while left:
-            left = left.left
-            hl += 1
+        # while left:
+        #     left = left.left
+        #     hl += 1
 
-        while right:
-            right = right.right
-            hr += 1
+        # while right:
+        #     right = right.right
+        #     hr += 1
 
-        if hl == hr:
-            # 如果此次迭代左右子树高度一样，那么实际上是满二叉树
-            return 2 ** hl - 1
-        else:
-            return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+        # if hl == hr:
+        #     # 如果此次迭代左右子树高度一样，那么实际上是满二叉树
+        #     return 2 ** hl - 1
+        # else:
+        #     return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+        if not root:
+            return 0
+        from collections import deque
+        que = deque([root])
+        cnt = 0
+        while que:
+            size = len(que)
+            for _ in range(size):
+                node = que.popleft()
+                cnt += 1
+
+                if node.left:
+                    que.append(node.left)
+                if node.right:
+                    que.append(node.right)
+        return cnt
 # @lc code=end
