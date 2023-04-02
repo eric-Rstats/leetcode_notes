@@ -145,7 +145,7 @@ def myfunc(W,N,wt_list,val_list):
 
 [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
 
-<img src="img/image-20200419173135539.png" alt="image-20200419173135539" style="zoom:33%;" />
+<img src="./img/image-20200419173135539.png" alt="image-20200419173135539" style="zoom:33%;" />
 
 ```python
 class Solution:
@@ -339,11 +339,11 @@ class Solution:
 
 考虑子序列不一定是连续的，首先需要定义一个转移方程，
 
-<img src="img/image-20200421232658237.png" alt="image-20200421232658237" style="zoom:50%;" />
+<img src=".img/image-20200421232658237.png" alt="image-20200421232658237" style="zoom:50%;" />
 
 定义`dp[i][j]`为索引i到j的字符串最长回文子序列，假如i，j处字符相同，那么$dp[i][j]=dp[i+1][j-1]+2$,否则需要看哪一种情况下更大。
 
-<img src="img/image-20200421233106912.png" alt="image-20200421233106912" style="zoom:50%;" />
+<img src=".img/image-20200421233106912.png" alt="image-20200421233106912" style="zoom:50%;" />
 
 ```python
 class Solution:
@@ -392,7 +392,7 @@ dp[i][j].first表示先手可以得到的最高分数，同理dp[i][j].second表
 而后手则是等先手选择后，取剩余石子堆最优。
 ```
 
-<img src="img/image-20200425144207824.png" alt="image-20200425144207824" style="zoom: 50%;" />
+<img src=".img/image-20200425144207824.png" alt="image-20200425144207824" style="zoom: 50%;" />
 
 ```python
 class Solution:
@@ -591,7 +591,7 @@ def permute(nums):
 
 剪枝的时候，将与前一个元素相同，同时前一个元素刚刚撤销选择的进行剔除。
 
-<img src="img/image-20200426151151130.png" alt="image-20200426151151130" style="zoom:50%;" />
+<img src=".img/image-20200426151151130.png" alt="image-20200426151151130" style="zoom:50%;" />
 
 ```python
 class Solution:
@@ -1329,7 +1329,7 @@ class Solution:
             return 1 + self.countNodes(root.left) + self.countNodes(root.right)
 ```
 
-![image-20200328135230038](img/image-20200328135230038.png)
+![image-20200328135230038](.img/image-20200328135230038.png)
 
 一颗完全二叉树的两颗子树，至少有一个是满二叉树。因此每次递归的时候，有一半会遇到`hl==hr`的终止条件，不会递归下去。故此段代码的复杂度为$O(log N * logN)$
 
