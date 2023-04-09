@@ -68,6 +68,6 @@ class Solution:
                 else:
                     dp[i][j] = max(dp[i][j - 1], dp[i + 1][j])
 
-        return dp[0][n-1]
+        return dp[0][-1]
 
 # @lc code=end
