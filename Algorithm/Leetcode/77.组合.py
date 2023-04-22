@@ -36,23 +36,21 @@
 class Solution:
     def combine(self, n: int, k: int) -> List[List[int]]:
         # 组合其实就是限制了树深的DFS
-        result = []
-        flag = [0] * n
+        result, path = [], []
 
-        def drawback(n, k, start, path):
+        def drawback(n, k, start):
             if k == len(path):
-                result.append(path.copy())
+                result.append(path[:])
                 return
-
-            for i in range(start, n):
-                if flag[i] == 1:
-                    continue
-                path.append(i + 1)
-                flag[i] = 1
-                drawback(n, k, i + 1, path)
+            
+            # 剪枝
+            # n-start+1+len(path) = k 
+            # 剩余的个数是否足够
+            for i in range(start, n+2-(k-len(path))):
+                path.append(i)
+                drawback(n, k, i + 1)
                 path.pop()
-                flag[i] = 0
 
-        drawback(n, k, 0, [])
+        drawback(n, k, 1)
         return result
 # @lc code=end

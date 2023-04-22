@@ -52,31 +52,27 @@
 
 class Solution:
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
-        result = []
-        n = len(candidates)
-        flag = [0] * n
+        result, path = [], []
         candidates.sort()
 
-        def drawback(candidates, target, start, path):
+        def drawback(candidates, target, start):
             if target == 0:
-                result.append(path.copy())
+                result.append(path[:])
                 return
-
-            for i in range(start, n):
-                if flag[i] == 1:
-                    continue
-                if i > 0 and candidates[i] == candidates[i - 1] and flag[i - 1] == 0:
-                    continue
+            
+            # 横向
+            for i in range(start, len(candidates)):
                 residual = target - candidates[i]
                 if residual < 0:
                     break
+                # 如果同一树层使用过
+                if i > start and candidates[i] == candidates[i-1]:
+                    continue
                 path.append(candidates[i])
-                flag[i] = 1
-                drawback(candidates, residual, i + 1, path)
+                drawback(candidates, residual, i + 1)
                 path.pop()
-                flag[i] = 0
 
-        drawback(candidates, target, 0, [])
+        drawback(candidates, target, 0)
         return result
 
 # @lc code=end

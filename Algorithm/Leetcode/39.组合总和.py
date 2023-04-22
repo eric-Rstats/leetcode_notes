@@ -52,21 +52,22 @@
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
 
-        result = []
-        candidates.sort()
+        result, path = [], []
+        candidates.sort() # 预排序
 
-        def drawback(candidates, start, target, path):
+        def drawback(candidates, start, target):
             if target == 0:
-                result.append(path.copy())
+                result.append(path[:])
+                return
 
             for i in range(start, len(candidates)):
-                residus = target - candidates[i]
+                residus = target - candidates[i] # target不变，新增了一个变量
                 if residus < 0:
                     break
                 path.append(candidates[i])
-                drawback(candidates, i, residus, path)
+                drawback(candidates, i, residus)
                 path.pop()
-        drawback(candidates, 0, target, [])
+        drawback(candidates, 0, target)
         return result
 
 # @lc code=end

@@ -41,24 +41,22 @@
 
 class Solution:
     def combinationSum3(self, k: int, n: int) -> List[List[int]]:
-        result = []
-        flag = [0] * 9
+        result, path = [], []
 
-        def drawback(k, target, path, curr):
-            if len(path) == k and target == 0:
-                result.append(path.copy())
+        def drawback(k, target, start):
+            if len(path) == k:
+                if target == 0:
+                   result.append(path[:])
                 return
 
-            for i in range(curr, 9):
-                residual = target - i - 1
-                if residual < 0:
-                    break
-                flag[i] = 1
-                path.append(i+1)
-                drawback(k, residual, path, i+1)
+            for i in range(start, 11-(k - len(path))):
+                residual = target - i
+                # if residual < 0:
+                #     break
+                path.append(i)
+                drawback(k, residual, i+1)
                 path.pop()
-                flag[i] = 0
 
-        drawback(k, n, [], 0)
+        drawback(k, n, 1)
         return result
 # @lc code=end
