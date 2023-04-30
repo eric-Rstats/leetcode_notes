@@ -61,3 +61,105 @@ from Delivery
 group by customer_id
 )
 ```
+
+[1084. 销售分析III](https://leetcode.cn/problems/sales-analysis-iii/)
+
+
+```
+select
+    t1.product_id, t2.product_name
+from Sales t1, Product t2
+where t1.product_id = t2.product_id
+group by t1.product_id
+# having sum(sale_date < '2019-01-01') = 0
+# and sum(sale_date > '2019-03-31') = 0
+having min(sale_date) between '2019-01-01' and '2019-03-31'
+and max(sale_date) between '2019-01-01' and '2019-03-31'
+
+```
+
+[1045. 买下所有产品的客户](https://leetcode.cn/problems/customers-who-bought-all-products/)
+
+```sql
+SELECT 
+    customer_id 
+FROM 
+    customer
+GROUP BY customer_id
+HAVING count(DISTINCT product_key) = (
+    SELECT 
+        count(DISTINCT product_key) 
+    FROM product
+)
+```
+
+[180. 连续出现的数字](https://leetcode.cn/problems/consecutive-numbers/)
+```sql
+select
+    DISTINCT num as ConsecutiveNums
+from
+(
+select
+    id,
+    num,
+    row_number() over(partition by num order by id) as rn1,
+    row_number() over(order by id) as rn2
+from Logs
+) t
+group by num, rn2-rn1
+having count(1) >= 3
+```
+
+[1321. 餐馆营业额变化增长](https://leetcode.cn/problems/restaurant-growth/)
+
+窗口函数可以指定范围，比如过去一周滑动
+```sql
+SELECT visited_on, amount, average_amount
+FROM
+(SELECT
+     visited_on,
+     SUM(amount) OVER (ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS amount,
+     ROUND(AVG(amount) OVER (ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 2) AS average_amount, 
+     ROW_NUMBER() OVER (ORDER BY visited_on) AS rn
+FROM
+(SELECT
+    visited_on,
+    SUM(amount) AS amount
+FROM Customer 
+group by visited_on
+) a
+) b
+WHERE b.rn >= 7
+```
+
+```sql
+select visited_on, amount, average_amount
+from (
+select distinct visited_on, 
+sum(amount) over(order by to_days(visited_on) range 6 preceding) amount, 
+round(sum(amount) over(order by to_days(visited_on) range 6 preceding)/7, 2) average_amount
+from Customer
+order by visited_on) c 
+where datediff(visited_on, (select min(visited_on) from Customer))>=6
+```
+
+[1484. 按日期分组销售产品](https://leetcode.cn/problems/group-sold-products-by-the-date/)
+group_concat函数
+```sql
+select
+    sell_date,
+    count(distinct product) as num_sold,
+    group_concat(distinct product) as products
+from Activities
+group by sell_date
+order by 1
+```
+
+[1517. 查找拥有有效邮箱的用户](https://leetcode.cn/problems/find-users-with-valid-e-mails/)
+正则
+```sql
+select *
+from users 
+where mail regexp '^[a-zA-A]+[a-zA-Z0-9_\\./\\-]*@leetcode\\.com$'
+
+```
